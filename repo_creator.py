@@ -2,10 +2,14 @@ import streamlit as st
 import requests
 import json
 import toml
+import os
+
+TOKEN = os.environ.get("github")
+
 
 # Load the secrets from the TOML file
-secrets = toml.load("secrets.toml")
-TOKEN = secrets["github"]["token"]
+#secrets = toml.load("secrets.toml")
+#TOKEN = secrets["github"]["token"]
 
 def create_github_repo(token, repo_name, private=True, description=""):
     url = "https://api.github.com/user/repos"
