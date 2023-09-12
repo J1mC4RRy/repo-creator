@@ -1,15 +1,14 @@
 import streamlit as st
 import requests
 import json
-import toml
 import os
+from dotenv import load_dotenv
 
-TOKEN = os.environ.get("github")
+# Load environment variables from the .env file
+load_dotenv()
 
-
-# Load the secrets from the TOML file
-#secrets = toml.load("secrets.toml")
-#TOKEN = secrets["github"]["token"]
+# Access the token from environment variable
+TOKEN = os.environ.get("TOKEN")
 
 def create_github_repo(token, repo_name, private=True, description=""):
     url = "https://api.github.com/user/repos"
@@ -43,14 +42,14 @@ with st.form(key='repo_creation_form'):
             st.success(f"Repository created successfully!")
             clone_url = result['clone_url']
             
-            # Display clone URL and copy button
+            # Display clone URL
             st.write(f"Clone URL: {clone_url}")
-            copy_button = st.button('Copy Clone URL')
-            if copy_button:
-                st.write('<script>window.navigator.clipboard.writeText("' + clone_url + '");</script>', unsafe_allow_html=True)
-                st.success('Clone URL copied to clipboard!')
-        else:
-            st.error(f"Error creating repository: {result['message']}")
+
+# Place the copy button outside the form
+copy_button = st.button('Copy Clone URL')
+if copy_button and "clone_url" in locals():
+    st.write('<script>window.navigator.clipboard.writeText("' + clone_url + '");</script>', unsafe_allow_html=True)
+    st.success('Clone URL copied to clipboard!')
 
 if __name__ == "__main__":
     st.write("Enter repository details and click 'Create Repository'.")
